@@ -38,7 +38,6 @@ function handleBackButton(word, latest) {
     }
 }
 bot.onText(/\/start/, async (msg) => {
-
     try {
         const userName = msg.chat.first_name;
         let word = msg.text
