@@ -1,6 +1,62 @@
 const TelegramBot = require('node-telegram-bot-api');
 
 const API_KEY_BOT = '6584920536:AAHwdvrjktGzaHWQexgar9Qq5T9sV81Y1iU';
+
+const bot = new TelegramBot(API_KEY_BOT, {
+    polling: true
+})
+const commands = [
+    {
+        command: 'start',
+        description: 'запуск'
+    },
+    {
+        command: 'keyb',
+        description: 'клавиатура'
+    },
+    {
+        command: 'help',
+        description: 'помощь'
+    },
+    {
+        command: 'my',
+        description: 'собрать самому'
+    },
+    {
+        command: 'code',
+        description: 'ввести код понравишегося букета'
+    }
+
+]
+bot.setMyCommands(commands)
+let latest = []
+function handleBackButton(word, latest) {
+    for (let i = 0; i<latest.length; i++) {
+        if(word !== latest[i]) {
+            latest.push(word)
+        }
+    }
+}
+bot.onText(/\/start/, async (msg) => {
+    try {
+        const userName = msg.chat.first_name;
+        let word = msg.text
+        handleBackButton()
+        await bot.sendMessage(msg.chat.id, "Здравствуйте!")
+        await bot.sendMessage(msg.chat.id, "Вы уже выбрали какой букет желаете заказать или хотите собрать свой неповторимый букет? \nЕсли вы хотите создать свой неповторимый букет то выбирайте собрать самому, а если есть тот что вам понравился, зайдите в меню и введите код букета.",
+            {
+                reply_markup: {
+                    keyboard: [
+                        ['Собрать самому'],
+                        ['Ввести код'],
+                    ], resize_keyboard: true
+                }
+            })
+    } catch (error) {
+        console.log(error)
+        await bot.sendMessage(msg.chat.id, "Ошибка")
+    }
+})
 bot.sendMessage(chatId, 'Выберите цвет букета:', colorKeyboard); 
         } else { 
             bot.sendMessage(chatId, 'Подтвердите или отмените заказ:', confirmationKeyboard); 
